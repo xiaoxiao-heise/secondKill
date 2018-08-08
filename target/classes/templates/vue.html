@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Vue入门-TodoList的删除功能-----</title>
+    <script src="./js/vue.js"></script>
+</head>
+<body>
+
+<div id="root">
+    <div>
+        <input v-model="inputValue"/>
+        <button @click="handleSubmit">提交</button>
+    </div>
+    <ul>
+        <!--<li v-for="(item,index) of list" :key="index">{{item}}</li>-->
+        <todo-item v-for="(item,index) of list"
+                   :key="index"
+                   :content="item"
+                   :index="index"
+                   @delete="handleDelete"
+        ></todo-item><!--订阅   监听delete   监听之后调用handleDelete方法-->
+    </ul>
+
+</div>
+
+<script>
+
+    Vue.component('todo-item',{
+        props:['content','index'],
+        template:'<li @click="handleClick">{{content}}</li>',
+        methods:{
+            handleClick:function(){
+                this.$emit('delete',this.index);	//发布   标志为delete
+            }
+        }
+    })
+
+    var v1 = new Vue({
+        el:"#root",
+        data:{
+            inputValue:"",
+            list:[]
+        },
+        methods:{
+            handleSubmit:function(){
+                if(this.inputValue.trim() == ""){
+                    alert("请输入内容");
+                    this.inputValue = "";
+                    return ;
+                }
+                this.list.push(this.inputValue);
+                this.inputValue="";
+            },
+            handleDelete:function(index){
+                this.list.splice(index,1);
+            }
+        }
+    })
+
+</script>
+
+</body>
+</html>
