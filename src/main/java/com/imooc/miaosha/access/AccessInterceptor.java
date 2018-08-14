@@ -32,21 +32,22 @@ public class AccessInterceptor  extends HandlerInterceptorAdapter{
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		if(handler instanceof HandlerMethod) {
-			MiaoshaUser user = getUser(request, response);
-			UserContext.setUser(user);
+				if(handler instanceof HandlerMethod) { //handler是不是handleMethod
+					MiaoshaUser user = getUser(request, response); //判断用户是否已经存在session
+					UserContext.setUser(user); //将user放到ThreadLocal实现用户单例
 			HandlerMethod hm = (HandlerMethod)handler;
-			AccessLimit accessLimit = hm.getMethodAnnotation(AccessLimit.class);
+			AccessLimit accessLimit = hm.getMethodAnnotation(AccessLimit.class); //得到这个控制类上的自定义限制便签，没有标签则放回turn表示通过，
+					//有标签的话则进行接下来的判断 。
 			if(accessLimit == null) {
 				return true;
 			}
 			int seconds = accessLimit.seconds();
 			int maxCount = accessLimit.maxCount();
-			boolean needLogin = accessLimit.needLogin();
+			boolean needLogin = accessLimit.needLogin();/*得到注解下的几个属性*/
 			String key = request.getRequestURI();
 			if(needLogin) {
 				if(user == null) {
-					render(response, CodeMsg.SESSION_ERROR);
+					render(response, CodeMsg.SESSION_ERROR); /*假如需要登录，session又没有这个用户则抛出异常，将错误码输出到前台*/
 					return false;
 				}
 				key += "_" + user.getId();
@@ -76,6 +77,12 @@ public class AccessInterceptor  extends HandlerInterceptorAdapter{
 		out.close();
 	}
 
+	/**
+	 * 和之前的方法相关联，通过request和response取出session中的user
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	private MiaoshaUser getUser(HttpServletRequest request, HttpServletResponse response) {
 		String paramToken = request.getParameter(MiaoshaUserService.COOKI_NAME_TOKEN);
 		String cookieToken = getCookieValue(request, MiaoshaUserService.COOKI_NAME_TOKEN);
