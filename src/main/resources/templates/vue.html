@@ -1,65 +1,43 @@
-
-<!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <title>Vue入门-TodoList的删除功能-----</title>
+    <title>商品列表</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- jquery -->
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
+    <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <!-- jquery-validator -->
+    <script type="text/javascript" th:src="@{/jquery-validation/jquery.validate.min.js}"></script>
+    <script type="text/javascript" th:src="@{/jquery-validation/localization/messages_zh.min.js}"></script>
+    <!-- layer -->
+    <script type="text/javascript" th:src="@{/layer/layer.js}"></script>
+    <!-- md5.js -->
+    <script type="text/javascript" th:src="@{/js/md5.min.js}"></script>
+    <!-- common.js -->
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
     <script src="./js/vue.js"></script>
+    <style type="text/css">
+        html,body{
+            height:100%;
+            width:100%;
+        }
+        body{
+            background:url('/img/bg2.jpg') no-repeat;
+            background-size:100% 100%;
+        }
+        #goodslist td{
+            border-top:1px solid #39503f61;
+        }
+    </style>
 </head>
 <body>
-
-<div id="root">
     <div>
-        <input v-model="inputValue"/>
-        <button @click="handleSubmit">提交</button>
+
     </div>
-    <ul>
-        <!--<li v-for="(item,index) of list" :key="index">{{item}}</li>-->
-        <todo-item v-for="(item,index) of list"
-                   :key="index"
-                   :content="item"
-                   :index="index"
-                   @delete="handleDelete"
-        ></todo-item><!--订阅   监听delete   监听之后调用handleDelete方法-->
-    </ul>
 
-</div>
 
-<script>
 
-    Vue.component('todo-item',{
-        props:['content','index'],
-        template:'<li @click="handleClick">{{content}}</li>',
-        methods:{
-            handleClick:function(){
-                this.$emit('delete',this.index);	//发布   标志为delete
-            }
-        }
-    })
-
-    var v1 = new Vue({
-        el:"#root",
-        data:{
-            inputValue:"",
-            list:[]
-        },
-        methods:{
-            handleSubmit:function(){
-                if(this.inputValue.trim() == ""){
-                    alert("请输入内容");
-                    this.inputValue = "";
-                    return ;
-                }
-                this.list.push(this.inputValue);
-                this.inputValue="";
-            },
-            handleDelete:function(index){
-                this.list.splice(index,1);
-            }
-        }
-    })
-
-</script>
 
 </body>
 </html>
