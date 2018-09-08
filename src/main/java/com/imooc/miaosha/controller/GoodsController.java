@@ -45,7 +45,7 @@ public class GoodsController {
 	ApplicationContext applicationContext;
 	
 	/**
-	 * QPS:1267 load:15 mysql
+	 * QPS:2267 load:15 mysql
 	 * 5000 * 10
 	 * QPS:2884, load:5 
 	 * */
